@@ -5,11 +5,12 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
-    use Notifiable;
-
+    use Notifiable, HasMediaTrait;
 
 
     /**
@@ -37,8 +38,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function registerMediaCollections() : void
+    {
+        $this->addMediaCollection('avatar')
+            ->singleFile();
+    }
+
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function hasPermission($permission): bool
+    {
+        return $this->role->permissions()->where('slug', $permission)->first() ? true : false;
     }
 }

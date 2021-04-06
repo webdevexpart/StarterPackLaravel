@@ -17,10 +17,12 @@
                 <div>Roles</div>
             </div>
             <div class="page-title-actions">
+                @if(Auth::user()->hasPermission('app.roles.create'))
                 <a href="{{ route('app.roles.create') }}" class="btn-shadow mr-3 btn btn-primary">
                     <i class="fas fa-plus-circle"></i>
                     <span class="ml-1">Create Role</span>
                 </a>
+                @endif
             </div>
         </div>
     </div>
@@ -53,10 +55,12 @@
                                 </td>
                                 <td class="text-center">{{ $role->updated_at->diffForHumans() }}</td>
                                 <td class="text-center">
+                                    @if(Auth::user()->hasPermission('app.roles.edit'))
                                     <a href="{{ route('app.roles.edit',$role->id) }}" class="btn btn-info btn-sm">
                                         <i class="fas fa-edit"></i>
                                     </a>
-
+                                    @endif
+                                    @if(Auth::user()->hasPermission('app.roles.destroy'))
                                     @if($role->deletable == true)
                                     <button onclick="deleteData({{$role->id}})" type="button" class="btn btn-danger btn-sm">
                                         <i class="fas fa-trash-alt"></i>
@@ -66,6 +70,7 @@
                                         @csrf
                                         @method('DELETE')
                                     </form>
+                                    @endif
                                     @endif
                                 </td>
                             </tr>

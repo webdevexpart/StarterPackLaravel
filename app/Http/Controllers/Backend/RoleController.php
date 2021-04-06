@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Module;
 use App\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 class RoleController extends Controller
@@ -17,6 +18,7 @@ class RoleController extends Controller
      */
     public function index()
     {
+        Gate::authorize('app.roles.index');
         $roles = Role::all();
         return view('backend.roles.index', compact('roles'));
     }
@@ -28,6 +30,7 @@ class RoleController extends Controller
      */
     public function create()
     {
+        Gate::authorize('app.roles.create');
         $modules = Module::all();
         return view('backend.roles.form', compact('modules'));
     }
@@ -40,6 +43,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('app.roles.create');
         $this->validate($request,[
            'name' => 'required|string|unique:roles',
            'permissions' => 'required|array',
@@ -73,6 +77,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        Gate::authorize('app.roles.edit');
         $modules = Module::all();
         return view('backend.roles.form', compact('modules', 'role'));
     }
@@ -86,6 +91,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+        Gate::authorize('app.roles.edit');
         $this->validate($request,[
             'name' => 'required|string|unique:roles,name,'.$role->id,
             'permissions' => 'required|array',
@@ -109,13 +115,13 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        Gate::authorize('app.roles.destroy');
         if ($role->deletable == true) {
             $role->delete();
             notify()->success('Role Deleted.', 'Success');
         } else {
             notify()->error('You can\'t delete system role.', 'Error');
         }
-
         return back();
     }
 }

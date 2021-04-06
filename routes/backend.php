@@ -13,13 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::group(['namespace' => 'Backend'], function () {
+    Route::get('dashboard', 'DashboardController')->name('dashboard');
+    Route::resource('roles', 'RoleController');
+    Route::resource('users', 'UserController');
 });
-
-Auth::routes();
-
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-
